@@ -8,7 +8,7 @@ Namespace Scripting.Interaction
 
         Private Declare Sub AllocConsole Lib "Kernel32"()
 
-	Private Function Choose(ByVal prompt As String, items As Object()) As Object
+	Private Function Assign(ByVal prompt As String, items As Object()) As Object
             Console.WriteLine(prompt)
 	    Dim pb As Integer = Console.CursorTop
 	    For Each item In items
@@ -41,7 +41,7 @@ Namespace Scripting.Interaction
 	    Return Nothing	
 	End Function
 
-	Private Function Confirm(ByVal text As String) As Boolean
+	Private Function Assure(ByVal text As String) As Boolean
 	    Console.Write("{0} ", text)
 	    Dim pt As Integer = Console.CursorTop
 	    Dim pl As Integer = Console.CursorLeft
@@ -66,13 +66,13 @@ Namespace Scripting.Interaction
 	End Function
 
 	Protected Overrides Function Output(ByVal message As String, ByVal yesno As Boolean) As Boolean
-		If yesno Then Return Confirm(message)
+		If yesno Then Return Assure(message)
 		Console.WriteLine(message)
 		Return False
 	End Function
 
 	Protected Overrides Function Input(ByVal prompt As String, ByVal values As Object()) As String
-		If values.Length > 1 Then Return Choose(prompt, values)
+		If values.Length > 1 Then Return Assign(prompt, values)
 		If values(0) IsNot Nothing Then My.Computer.Keyboard.SendKeys(values(0), True)
             	Console.WriteLine(prompt)
             	Console.Write("> ")

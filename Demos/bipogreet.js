@@ -1,7 +1,7 @@
 function Start(){
-	var greeter = Host.Attach("greeter.js");
+	var greeter = Host.Import("greeter.js");
 	var name = Host.Accept("Enter your name", Host.Action("Identify"));
-	var region = Host.Assign("Select your region", "East", "West", "North", "South");
-	var formal = Host.Assure("Show respect?");
-	Host.Assert(greeter.Greet(name, region, formal));	
+	var region = Host.Choose("Select your region", "East", "West", "North", "South");
+	var formal = Host.Concur("Show respect?");
+	Host.Inform(greeter.Greet(name, region, formal));	
 }

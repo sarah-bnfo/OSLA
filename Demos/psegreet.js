@@ -5,7 +5,7 @@ function Start(){
 	
 	var name = Host.Accept("Your name: ", stateGroup.Peek("name"));
 	if(name){
-		Host.Assert("Hello " + name + "!");
+		Host.Inform("Hello " + name + "!");
 		stateGroup.Put("name", name);
 	}		
 }

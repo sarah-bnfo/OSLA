@@ -4,7 +4,7 @@ Namespace Shila
 
 		Private Shared title As String = "Shila"
 
-		Public Function Attach(scriptFile As String) As Object
+		Public Function Import(scriptFile As String) As Object
 			Return Scripting.Integration.ScriptCaller.CallScript(System.IO.File.ReadAllText(scriptFile), Me, Nothing)
 		End Function
 
@@ -13,11 +13,11 @@ Namespace Shila
 			Return False
 		End Function		
 
-		Public Sub Assert(text As String)
+		Public Sub Inform(text As String)
 			MsgBox(text, vbInformation, title)
 		End Sub
 
-		Public Function Assure(confirmation As String) As Boolean
+		Public Function Concur(confirmation As String) As Boolean
 			Return MsgBox(confirmation, vbQuestion + vbYesNo, title) = vbYes
 		End Function
 
@@ -31,7 +31,7 @@ Namespace Shila
 			End If		
 		End Function
 
-		Public Function Assign(prompt As String, ParamArray choices As Object()) As Object
+		Public Function Choose(prompt As String, ParamArray choices As Object()) As Object
 			Dim value As Object = Nothing
 			If choices.Length > 0 Then	
 				prompt = prompt & vbCrLf & "[" & String.Join("|", choices) & "]"
@@ -49,7 +49,7 @@ Namespace Shila
 			Try
 				host.Start(scriptFile)
 			Catch ex As Exception
-				MsgBox("Error: " & ex.ToString(), vbExclamation, title)
+				MsgBox("Error: " & ex.Message, vbExclamation, title)
 			End Try
 		End Sub
 

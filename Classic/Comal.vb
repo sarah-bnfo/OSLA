@@ -4,7 +4,7 @@ Namespace Comal
 
 		Private Shared title As String = "Comal"
 
-		Public Function Attach(scriptFile As String) As Object
+		Public Function Import(scriptFile As String) As Object
 			Return Scripting.Integration.ScriptCaller.CallScript(System.IO.File.ReadAllText(scriptFile), Me, Nothing)
 		End Function
 
@@ -34,7 +34,7 @@ Namespace Comal
 			If Decimal.TryParse(input, result) Then Return result Else Return input
 		End Function
 
-		Public Function Assign(prompt As String, ParamArray choices As Object()) As Object
+		Public Function Choose(prompt As String, ParamArray choices As Object()) As Object
 			Dim value As Object = Nothing
 			If choices.Length > 0 Then	
 				prompt = prompt & " [" & String.Join("|", choices) & "]"
@@ -48,11 +48,11 @@ Namespace Comal
 			If Decimal.TryParse(input, result) Then Return result Else Return input
 		End Function
 
-		Public Sub Assert(text As String)
+		Public Sub Inform(text As String)
 			Console.WriteLine(text)			
 		End Sub
 
-		Public Function Assure(confirmation As String) As Boolean
+		Public Function Concur(confirmation As String) As Boolean
 			Console.Write("{0} (y/n): ", confirmation)
 			Dim result As String = Console.ReadLine()
 			Console.WriteLine()

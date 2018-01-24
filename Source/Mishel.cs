@@ -343,6 +343,19 @@ namespace Scripting.Integration
 				return script;			
 			}
 		}
+
+		public virtual object Import(string source)
+		{
+			return ActivateScript(source);
+		}	
+
+		public virtual object Action(string name, params object[] arguments)
+		{
+			if(name.ToLower() == "identify")
+				return this.GetType().Assembly.GetName().Name;
+			return false;	
+		}
+
     	}
 
 	public static class ScriptCaller
@@ -396,24 +409,12 @@ namespace Scripting.Interaction
 
 		protected abstract bool Output(string message, bool confirm);
 
-		public virtual object Attach(string source)
-		{
-			return ActivateScript(source);
-		}	
-
-		public virtual object Action(string name, params object[] arguments)
-		{
-			if(name.ToLower() == "identify")
-				return this.GetType().Assembly.GetName().Name;
-			return false;	
-		}
-
-		public virtual void Assert(string text)
+		public virtual void Inform(string text)
 		{
 			Output(text, false);
 		}
 
-		public virtual bool Assure(string confirmation)
+		public virtual bool Concur(string confirmation)
 		{
 			return Output(confirmation, true);
 		}
@@ -430,7 +431,7 @@ namespace Scripting.Interaction
 			return input;				
 		} 
 
-		public virtual object Assign(string prompt, params object[] choices)
+		public virtual object Choose(string prompt, params object[] choices)
 		{
 			string input = Input(prompt, choices);	
 
