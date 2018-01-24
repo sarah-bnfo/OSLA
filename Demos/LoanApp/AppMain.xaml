@@ -1,0 +1,31 @@
+<Window   
+ Name="mainWindow" Title="Loan Calculator"
+ Width="250" Height="240" WindowStartupLocation="CenterScreen"> 
+ <DockPanel Background="LightBlue">
+  <Menu DockPanel.Dock="Top">
+    <MenuItem Header="_Action">
+      <MenuItem Name="calcMenuItem" Header="_Calculate E.M.I"/>
+      <MenuItem Name="setRateMenuItem" Header="_Interest Rate..."/>
+      <Separator/>
+      <MenuItem Name="exitMenuItem" Header="E_xit"/>
+    </MenuItem>
+  </Menu>
+  <Canvas>
+    <TextBlock Text="Loan:" Canvas.Left="10" Canvas.Top="12" Width="80" />
+    <TextBox Name="loanTextBox" Text="10000" Canvas.Left="100" Canvas.Top="10" Width="80"/>
+    <TextBlock Text="Period:" Canvas.Left="10" Canvas.Top="42" Width="80" />
+    <TextBox Name="periodTextBox" Text="1" Canvas.Left="100" Canvas.Top="40" Width="80"/>
+    <TextBlock Text="Scheme:" Canvas.Left="10" Canvas.Top="72" Width="80" />
+    <ComboBox Name="schemeComboBox" Canvas.Left="100" Canvas.Top="70" Width="80" SelectedIndex="2">
+      <ComboBoxItem>Education</ComboBoxItem>
+      <ComboBoxItem>Home</ComboBoxItem>
+      <ComboBoxItem>Personal</ComboBoxItem>
+      <ComboBoxItem>Business</ComboBoxItem>    
+    </ComboBox>
+    <CheckBox Name="employeeCheckBox" Content="Employee" Canvas.Left="100" Canvas.Top="100" Width="80"/>
+    <TextBlock Text="E.M.I:" Canvas.Left="10" Canvas.Top="142" Width="80" />
+    <TextBox Name="emiTextBox" Canvas.Left="100" Canvas.Top="140" Width="80" IsReadOnly="True" Background="LightGray"/>  
+  </Canvas>
+ </DockPanel>
+</Window>
+

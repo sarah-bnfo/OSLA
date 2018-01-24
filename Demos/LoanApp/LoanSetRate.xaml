@@ -1,0 +1,12 @@
+<Window
+  Name="setRateWindow" Tag="LoanSetRate.xaml.js"
+  Width="180" Height="140" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" ShowInTaskbar="False">
+ <StackPanel>
+  <TextBlock Text="Enter new rate of interest" Margin="5"/>
+  <TextBox Name="rateTextBox" Margin="5"/>
+  <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+    <Button Name="okButton" Content=" OK " Margin="5"/>
+    <Button Name="cancelButton" Content="Cancel" Margin="5"/>
+  </StackPanel>
+ </StackPanel>
+</Window>
