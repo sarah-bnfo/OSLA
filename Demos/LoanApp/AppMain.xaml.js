@@ -10,7 +10,7 @@ function Load(){
 	AttachHandler(periodTextBox, "TextChanged", Clear);
 	AttachHandler(schemeComboBox, "SelectionChanged", Calculate);
 	AttachHandler(employeeCheckBox, "Click", Calculate);
-	lu = Parent.Host.Attach("LoanUtil.js");
+	lu = Parent.Host.Import("LoanUtil.js");
 }
 
 function Calculate(s, e){
