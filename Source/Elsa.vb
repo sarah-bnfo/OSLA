@@ -100,7 +100,7 @@ Namespace Scripting.Interaction
 	    CallByName(script, "Start", CallType.Method, task)
         End Sub
 
-        Friend Shared Sub Run(ByVal scriptFile As String)
+        Protected Friend Shared Sub Run(ByVal scriptFile As String, Optional providerType As Type=Nothing)
             AllocConsole()
             Dim writer As TextWriter = New StreamWriter(Console.OpenStandardOutput()) With {.AutoFlush = True}
             Console.SetOut(writer)
@@ -110,7 +110,8 @@ Namespace Scripting.Interaction
             Console.ForegroundColor = ConsoleColor.Black
             Console.Clear()
             Console.Title = "Executing script - Elsa"
-            Dim host As ConsoleInteractivityProvider = New ConsoleInteractivityProvider()
+            Dim host As ConsoleInteractivityProvider
+	    If providerType Is Nothing Then host = New ConsoleInteractivityProvider() Else host = Activator.CreateInstance(providerType)
             Try
                 host.Start(scriptFile, Nothing)
             Catch ex As Exception

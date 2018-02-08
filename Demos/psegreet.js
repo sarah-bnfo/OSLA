@@ -1,6 +1,7 @@
 function Start(){
 	
 	var defStore = Host.OpenStore();
+	//var defStore = Host.Action("OpenStore");
 	var stateGroup = defStore.Choose("state", true);
 	
 	var name = Host.Accept("Your name: ", stateGroup.Peek("name"));
