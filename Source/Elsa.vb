@@ -1,12 +1,19 @@
 Imports System.IO
+Imports System.Reflection
 Imports System.Windows.Forms
 
 Namespace Scripting.Interaction
+
+    Public Interface IActionProvider
+	Function Action(script As Object, name As String, arguments As Object())
+    End Interface
 
     Public Class ConsoleInteractivityProvider
     Inherits Scripting.Interaction.InteractiveScriptHost
 
         Private Declare Sub AllocConsole Lib "Kernel32"()
+
+	Private actor As IActionProvider
 
 	Private Function Assign(ByVal prompt As String, items As Object()) As Object
             Console.WriteLine(prompt)
@@ -92,6 +99,7 @@ Namespace Scripting.Interaction
                     Console.WriteLine()
                     Return True
             End Select
+	    If actor IsNot Nothing Then Return actor.Action(Me.Active, name, arguments) 
             Return False
         End Function
 
@@ -100,7 +108,7 @@ Namespace Scripting.Interaction
 	    CallByName(script, "Start", CallType.Method, task)
         End Sub
 
-        Protected Friend Shared Sub Run(ByVal scriptFile As String, Optional providerType As Type=Nothing)
+        Protected Friend Shared Sub Run(ByVal scriptFile As String, Optional actionProviderType As Type=Nothing)
             AllocConsole()
             Dim writer As TextWriter = New StreamWriter(Console.OpenStandardOutput()) With {.AutoFlush = True}
             Console.SetOut(writer)
@@ -110,8 +118,8 @@ Namespace Scripting.Interaction
             Console.ForegroundColor = ConsoleColor.Black
             Console.Clear()
             Console.Title = "Executing script - Elsa"
-            Dim host As ConsoleInteractivityProvider
-	    If providerType Is Nothing Then host = New ConsoleInteractivityProvider() Else host = Activator.CreateInstance(providerType)
+            Dim host As New ConsoleInteractivityProvider
+	    If actionProviderType IsNot Nothing Then host.actor = Activator.CreateInstance(actionProviderType)
             Try
                 host.Start(scriptFile, Nothing)
             Catch ex As Exception
@@ -237,8 +245,15 @@ Namespace Scripting.Interaction
         Public Shared Sub Main(ByVal args As String())
             If args.Length = 1 Then
                 ConsoleInteractivityProvider.Run(args(0))
-                Return
+		Return
+	    End If
+	    If args.Length = 3 AndAlso args(0) = "/ap" Then
+		Dim apAsm As [Assembly] = [Assembly].LoadFrom(args(1))
+		Dim apTyp As Type = apAsm.GetType("Scripting.Interaction.ActionProvider")
+		ConsoleInteractivityProvider.Run(args(2), apTyp)
+	        Return		 
             End If
+
             Environment.SetEnvironmentVariable("TMP", Environment.CurrentDirectory, EnvironmentVariableTarget.Process)
             Dim i As Integer = Array.IndexOf(args, "/edit")
             If i >= 0 AndAlso i < args.Length - 1 Then defaultScript = New FileInfo(args(i + 1))
