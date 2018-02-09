@@ -2,6 +2,8 @@
 
 if "%PROCESSOR_ARCHITECTURE%"=="x86" goto x86
 set fr="%ProgramFiles(x86)%\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2"
+csc /nologo /t:library /out:Bin\Mishel64.dll Source\MishelX.cs
+vbc /nologo /t:winexe /out:Bin\Rose.exe /win32icon:Resource\rose.ico Source\Rose.vb /r:Bin\Mishel64.dll
 goto common
 :x86
 set fr="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\WPF"
