@@ -98,12 +98,18 @@ namespace Demi
 
 		public object NewInstance(string typeName, string assemblyName, params object[] arguments)
 		{			
-			Type objType = Type.GetType(typeName + ", " + assemblyName);
-			if(objType == null)
+			Type objType;
+
+			if(assemblyName.EndsWith(".dll") || assemblyName.EndsWith(".exe"))
 			{
-				Assembly asm = Assembly.LoadFrom(assemblyName + ".dll");
-				objType = asm.GetType(typeName, true);
+				Assembly asm = Assembly.LoadFrom(assemblyName);
+				objType = asm.GetType(typeName);
 			}
+			else
+				objType = Type.GetType(typeName + ", " + assemblyName);
+
+			if(objType == null)
+				throw new ArgumentException("Cannot find " + typeName);
 
 			return Activator.CreateInstance(objType, arguments);
 		}
