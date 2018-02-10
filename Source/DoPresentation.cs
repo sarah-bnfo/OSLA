@@ -46,6 +46,7 @@ namespace Demi
 	    			{
 					var nsm = new XmlNamespaceManager(new NameTable());
 					nsm.AddNamespace(string.Empty, "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
+					nsm.AddNamespace("x", "http://schemas.microsoft.com/winfx/2006/xaml");
 					var pc = new XmlParserContext(null, nsm, null, XmlSpace.None);
 
 					Window win = (Window) XamlReader.Load(XmlReader.Create(sr, null, pc));
