@@ -107,7 +107,7 @@ Namespace Persistence
 			Dim serializer As New XmlSerializer(GetType(Store)) 
 			Dim ns As New XmlSerializerNamespaces()
 			ns.Add("", "")
-			Using writer As New StreamWriter(Name + ".gkvml")
+			Using writer As New StreamWriter(Name + ".kvs")
 				serializer.Serialize(writer, Me, ns)
 			End Using
 			modified = True	
@@ -121,14 +121,11 @@ Namespace Scripting
 
 	Public Module HostExtension
 
-		Private Invoker
-
-		Public Function Invoke(Optional storeName As String=Nothing, Optional storeAutoCommit As Boolean=True) As Persistence.Store
-			If storeName Is Nothing Then storeName = Invoker.Host.TargetName
+		Public Function Invoke(storeName As String, Optional storeAutoCommit As Boolean=True) As Persistence.Store
 			Dim serializer As New XmlSerializer(GetType(Persistence.Store))
 			Dim store As Persistence.Store 
 			Try
-				Using reader As New StreamReader(storeName + ".gkvml")
+				Using reader As New StreamReader(storeName + ".kvs")
 					store = CType(serializer.Deserialize(reader), Persistence.Store)
 				End Using
 			Catch

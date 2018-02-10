@@ -96,6 +96,18 @@ namespace Demi
 	    		return null;
         	}
 
+		public object NewInstance(string typeName, string assemblyName, params object[] arguments)
+		{			
+			Type objType = Type.GetType(typeName + ", " + assemblyName);
+			if(objType == null)
+			{
+				Assembly asm = Assembly.LoadFrom(assemblyName + ".dll");
+				objType = asm.GetType(typeName, true);
+			}
+
+			return Activator.CreateInstance(objType, arguments);
+		}
+
 		public bool ShowMessage(string text, bool critical=false)
 		{
 			return MessageBox.Show(text, hostedWindow.Title, MessageBoxButton.OKCancel, critical ? MessageBoxImage.Error : MessageBoxImage.Exclamation) == MessageBoxResult.OK;
