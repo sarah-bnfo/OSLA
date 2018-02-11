@@ -66,6 +66,19 @@ namespace Demi
 		    				host.hostedWindow = win;
 						host.parent = context;
 		    				host.Load();
+						MethodInfo[] methods = host.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+						foreach(MethodInfo mi in methods)
+						{
+							int u = mi.Name.IndexOf('_');
+							if(u >= 0 && mi.GetParameters().Length == 2)
+							{
+								string ctlName = mi.Name.Substring(0, u);
+								string evtName = mi.Name.Substring(u + 1);
+								object ctrl = win.FindName(ctlName);
+								if(ctrl != null)
+									host.AttachHandler(ctrl, evtName, mi.Name);
+							}
+						}
 					}
 					else
 					{
