@@ -134,7 +134,7 @@ namespace Scripting.Integration
         	{
            		Type t = target.GetType();
             		EventInfo ei = t.GetEvent(eventName);
-            		Delegate eh = ScriptAdapter.CreateEventDelegate(handler.Method, ei.EventHandlerType, handler.Target);
+            		Delegate eh = Evita.ScriptAdapter.CreateEventDelegate(handler.Method, ei.EventHandlerType, handler.Target);
 
             		ei.AddEventHandler(target, eh);
 

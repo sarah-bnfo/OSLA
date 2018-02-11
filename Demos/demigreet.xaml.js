@@ -1,10 +1,9 @@
 function Load(){
-	AttachHandler(actionButton, "Click", Action);
-	AttachHandler(regionEntry, "SelectionChanged", Action);
-	AttachHandler(respectEntry, "Click", Action);
+	AttachHandler(regionEntry, "SelectionChanged", actionButton_Click);
+	AttachHandler(respectEntry, "Click", actionButton_Click);
 }
 
-function Action(s, e){
+function actionButton_Click(s, e){
 	outputBlock.Text = Parent.Greet(nameEntry.Text, regionEntry.SelectedValue.Content, respectEntry.IsChecked);
 }
 
