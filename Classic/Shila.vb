@@ -33,11 +33,13 @@ Namespace Shila
 
 		Public Function Choose(prompt As String, ParamArray choices As Object()) As Object
 			Dim value As Object = Nothing
+			Dim text As String = prompt
 			If choices.Length > 0 Then	
 				prompt = prompt & vbCrLf & "[" & String.Join("|", choices) & "]"
 				value = choices(0)
 			End If
-			Return Accept(prompt, value)
+			Dim result As String = Accept(prompt, value)
+			If Array.IndexOf(choices, result) >= 0 Then Return result Else Return Choose(text, choices)
 		End Function
 
 		Private Sub Start(scriptFile As String)
@@ -66,4 +68,3 @@ Namespace Shila
 End Namespace
 
 'vbc /nologo /t:winexe /d:_MyType=\"Empty\" Shila.vb Saina.vb
-'vbc /nologo /t:winexe /d:_MyType=\"Empty\" Shila.vb /r:Mishel.dll
