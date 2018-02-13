@@ -23,12 +23,9 @@ Namespace Shila
 
 		Public Function Accept(prompt As String, Optional value As Object=Nothing) As Object
 			Dim input As String = InputBox(prompt, title, value)
-			If input = "" Then 
-				Return value
-			Else
-				Dim result As Decimal
-				If Decimal.TryParse(input, result) Then Return result Else Return input
-			End If		
+			If input = "" Then Return Nothing
+			Dim result As Decimal
+			If Decimal.TryParse(input, result) Then Return result Else Return input
 		End Function
 
 		Public Function Choose(prompt As String, ParamArray choices As Object()) As Object

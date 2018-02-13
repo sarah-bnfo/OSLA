@@ -58,10 +58,11 @@ Namespace Rose
 			Else
 				Console.Write("{0} [{1}]: ", prompt, value)
 			End If
-			Dim result As String = Console.ReadLine()
+			Dim input As String = Console.ReadLine()
 			Console.WriteLine()
-			If result.Length = 0 Then result = value
-			Return result			
+			If input.Length = 0 Then input = value
+			Dim result As Decimal
+			If Decimal.TryParse(input, result) Then Return result Else Return input		
 		End Function
 
 		Public Overrides Sub Inform(text As String)
@@ -137,9 +138,10 @@ Namespace Rose
 		End Function
 
 		Public Overrides Function Accept(prompt As String, Optional value As String="") As String
-			Dim result As String = InputBox(prompt, "Rose", value)
-			If result = "" Then result = Nothing
-			Return result
+			Dim input As String = InputBox(prompt, "Rose", value)
+			If input = "" Then Return Nothing
+			Dim result As Decimal
+			If Decimal.TryParse(input, result) Then Return result Else Return input
 		End Function
 
 		Public Overrides Sub Inform(text As String)
