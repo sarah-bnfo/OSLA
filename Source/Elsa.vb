@@ -4,16 +4,10 @@ Imports System.Windows.Forms
 
 Namespace Scripting.Interaction
 
-    Public Interface IActionProvider
-	Function Action(script As Object, name As String, arguments As Object())
-    End Interface
-
     Public Class ConsoleInteractivityProvider
     Inherits Scripting.Interaction.InteractiveScriptHost
 
         Private Declare Sub AllocConsole Lib "Kernel32"()
-
-	Private actor As IActionProvider
 
 	Private Function Assign(ByVal prompt As String, items As Object()) As Object
             Console.WriteLine(prompt)
@@ -90,8 +84,6 @@ Namespace Scripting.Interaction
 
         Public Overrides Function Action(ByVal name As String, ParamArray arguments As Object()) As Object
             Select Case name.ToLower()
-		Case "identify"
-		    Return "Elsa"
                 Case "clearscreen"
                     Console.Clear()
                     Return True
@@ -99,8 +91,7 @@ Namespace Scripting.Interaction
                     Console.WriteLine()
                     Return True
             End Select
-	    If actor IsNot Nothing Then Return actor.Action(Me.Active, name, arguments) 
-            Return False
+            Return MyBase.Action(name, arguments)
         End Function
 
         Private Sub Start(ByVal scriptFile As String, ByVal task As String)
@@ -108,7 +99,7 @@ Namespace Scripting.Interaction
 	    CallByName(script, "Start", CallType.Method, task)
         End Sub
 
-        Protected Friend Shared Sub Run(ByVal scriptFile As String, Optional actionProviderType As Type=Nothing)
+        Protected Friend Shared Sub Run(ByVal scriptFile As String, Optional aspectProviderType As Type=Nothing)
             AllocConsole()
             Dim writer As TextWriter = New StreamWriter(Console.OpenStandardOutput()) With {.AutoFlush = True}
             Console.SetOut(writer)
@@ -119,7 +110,7 @@ Namespace Scripting.Interaction
             Console.Clear()
             Console.Title = "Executing script - Elsa"
             Dim host As New ConsoleInteractivityProvider
-	    If actionProviderType IsNot Nothing Then host.actor = Activator.CreateInstance(actionProviderType)
+	    If aspectProviderType IsNot Nothing Then host.Aspect = Activator.CreateInstance(aspectProviderType)
             Try
                 host.Start(scriptFile, Nothing)
             Catch ex As Exception
@@ -249,7 +240,7 @@ Namespace Scripting.Interaction
 	    End If
 	    If args.Length = 3 AndAlso args(0) = "/ap" Then
 		Dim apAsm As [Assembly] = [Assembly].LoadFrom(args(1))
-		Dim apTyp As Type = apAsm.GetType("Scripting.Interaction.ActionProvider")
+		Dim apTyp As Type = apAsm.GetType("Scripting.Interaction.AspectProvider")
 		ConsoleInteractivityProvider.Run(args(2), apTyp)
 	        Return		 
             End If
