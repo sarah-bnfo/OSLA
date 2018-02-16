@@ -194,9 +194,10 @@ namespace Scripting.Interaction
 			}
 		}
 
-		private static void Run(string scriptFile, string task)
+		private static void Run(string scriptFile, string task, Type aspectProviderType=null)
 		{
 			DialogInteractivityProvider host = new DialogInteractivityProvider(scriptFile);
+			if(aspectProviderType != null) host.Aspect = (AspectProviderBase)Activator.CreateInstance(aspectProviderType);
 			host.Start(scriptFile, task);
 		}
 
@@ -211,12 +212,19 @@ namespace Scripting.Interaction
 			}
 
 			string curDir = Directory.GetCurrentDirectory();
-			FileInfo scriptFile = new FileInfo(args[0]);
-			Directory.SetCurrentDirectory(scriptFile.DirectoryName);
 			try
 			{
-				Console.WriteLine("Running");
-				DialogInteractivityProvider.Run(scriptFile.Name, args.Length > 1 ? args[1] : null);				
+				Type apType = null;
+				int si = 0;
+				if(args.Length > 2 && args[0] == "/ap")
+				{
+					Assembly apAsm = Assembly.LoadFrom(args[1]);
+					apType = apAsm.GetType("Scripting.Interaction.AspectProvider");
+					si = 2; 
+				}
+				FileInfo scriptFile = new FileInfo(args[si]);
+				Directory.SetCurrentDirectory(scriptFile.DirectoryName);
+				DialogInteractivityProvider.Run(scriptFile.Name, args.Length > si + 1 ? args[si + 1] : null, apType);				
 			}
 			catch(Exception ex)
 			{
