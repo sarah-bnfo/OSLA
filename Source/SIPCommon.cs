@@ -7,18 +7,12 @@ namespace Scripting.Interaction
 			return false;
 		}
 
-		public virtual bool OnConcur(dynamic scriptObj, string confirmation, out bool result)
+		public virtual bool OnConfirm(dynamic scriptObj, string confirmation, out bool result)
 		{
 			return result = false;
 		}
 
-		public virtual bool OnAccept(dynamic scriptObj, string prompt, object value, out object result)
-		{
-			result = null;
-			return false;
-		}
-
-		public virtual bool OnChoose(dynamic scriptObj, string prompt, object[] choices, out object result)
+		public virtual bool OnAccept(dynamic scriptObj, string Accept, object value, out object result)
 		{
 			result = null;
 			return false;
@@ -43,7 +37,7 @@ namespace Scripting.Interaction
 
 		protected AspectProviderBase Aspect;
 
-		protected abstract string Input(string prompt, object[] values);
+		protected abstract string Input(string Accept, object[] values);
 
 		protected abstract bool Output(string message, bool confirm);
 
@@ -53,21 +47,21 @@ namespace Scripting.Interaction
 				Output(text, false);
 		}
 
-		public virtual bool Concur(string confirmation)
+		public virtual bool Confirm(string text)
 		{
 			bool result = false;
-			if(Aspect != null && Aspect.OnConcur(Active, confirmation, out result)) return result;
+			if(Aspect != null && Aspect.OnConfirm(Active, text, out result)) return result;
 
-			return Output(confirmation, true);
+			return Output(text, true);
 		}
 
-		public virtual object Accept(string prompt, object value=null)
+		public virtual object Accept(string text, params object[] values)
 		{
 			object result = null;
-			if(Aspect != null && Aspect.OnAccept(Active, prompt, value, out result)) return result;
+			if(Aspect != null && Aspect.OnAccept(Active, text, values, out result)) return result;
 
-			string input = Input(prompt, new object[]{value});
-			if(input == null) return value;
+			string input = Input(text, values);
+			if(input == null) return values.Length == 1 ? values[0] : null;
 
 			decimal inputVal;
 			if(decimal.TryParse(input, out inputVal))
@@ -75,23 +69,6 @@ namespace Scripting.Interaction
 
 			return input;				
 		} 
-
-		public virtual object Choose(string prompt, params object[] choices)
-		{
-			object result = null;
-			if(Aspect != null && Aspect.OnChoose(Active, prompt, choices, out result)) return result;
-
-			string input = Input(prompt, choices);	
-
-			if(input == null && choices.Length > 0)
-				input = choices[0].ToString();
-
-			decimal inputVal;
-			if(decimal.TryParse(input, out inputVal))
-				return inputVal;
-			
-			return input;		
-		}
 
 		public virtual object Import(string source)
 		{

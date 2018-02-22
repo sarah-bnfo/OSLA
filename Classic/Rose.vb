@@ -11,11 +11,9 @@ Namespace Rose
 
 		Public MustOverride Sub Inform(text As String)
 
-		Public MustOverride Function Accept(prompt As String, Optional value As String = "") As String
+		Public MustOverride Function Accept(text As String, ParamArray values As Object()) As Object
 
-		Public MustOverride Function Concur(text As String) As Boolean
-
-		Public MustOverride Function Choose(prompt As String, ParamArray choices As Object()) As String
+		Public MustOverride Function Confirm(text As String) As Boolean
 
 		Public Overridable Function Action(name As String, ParamArray options As Object()) As Object		
 			If name.ToLower() = "identify" Then Return "Rose"
@@ -37,9 +35,9 @@ Namespace Rose
 
 		Declare Sub AllocConsole Lib "Kernel32"()
 
-		Public Overrides Function Choose(prompt As String, ParamArray items() As Object) As String
+		Private Function Choose(Accept As String, ParamArray items() As Object) As String
 			Dim count As Integer = items.Length
-			Console.WriteLine(prompt)
+			Console.WriteLine(Accept)
 			For i As Integer = 0 To count - 1
 				Console.WriteLine("{0}. {1}", i + 1, items(i))
 			Next
@@ -52,15 +50,16 @@ Namespace Rose
 			Return items(choice - 1)
 		End Function
 
-		Public Overrides Function Accept(prompt As String, Optional value As String="") As String
-			If value = Nothing OrElse value.Length = 0 Then
-				Console.Write("{0}: ", prompt)
+		Public Overrides Function Accept(text As String, ParamArray values() As Object) As Object
+			If values.Length > 1 Then Return Choose(text, values)
+			If values.Length = 1 Then
+				Console.Write("{0} [{1}]: ", text, values(0))
 			Else
-				Console.Write("{0} [{1}]: ", prompt, value)
+				Console.Write("{0}: ", text)				
 			End If
 			Dim input As String = Console.ReadLine()
 			Console.WriteLine()
-			If input.Length = 0 Then input = value
+			If input.Length = 0 Then input = IIf(values.Length = 1, values(0), Nothing)
 			Dim result As Decimal
 			If Decimal.TryParse(input, result) Then Return result Else Return input		
 		End Function
@@ -70,13 +69,12 @@ Namespace Rose
 			Console.WriteLine()
 		End Sub
 
-		Public Overrides Function Concur(text As String) As Boolean
+		Public Overrides Function Confirm(text As String) As Boolean
 			Console.Write("{0} (y/n): ", text)
 			Dim input As String = Console.ReadLine()
 			Console.WriteLine()
 			Return input.ToLower() = "y"
 		End Function
-
 
 		Friend Overrides Sub Run(script As String)
 			AllocConsole()
@@ -94,7 +92,7 @@ Namespace Rose
 	Public Class DialogInteractionHost 
 	Inherits InteractionHost
 
-		Public Overrides Function Choose(prompt As String, ParamArray items As Object()) As String
+		Private Function Choose(Accept As String, ParamArray items As Object()) As String
 			Dim box As Form = New Form()
 			Dim buttonCancel As Button = New Button()
 			Dim valueComboBox As ComboBox = New ComboBox()
@@ -104,7 +102,7 @@ Namespace Rose
 			messageLabel.Location = New Point(5, 10)
 			messageLabel.Size = New Size(265, 100)
 			messageLabel.AutoSize = False
-			messageLabel.Text = prompt
+			messageLabel.Text = Accept
 			valueComboBox.Location = New Point(5, 90)
 			valueComboBox.Size = New Size(330, 20)
 			For i As Integer = 0 To items.Length - 1
@@ -137,8 +135,9 @@ Namespace Rose
 			Return result
 		End Function
 
-		Public Overrides Function Accept(prompt As String, Optional value As String="") As String
-			Dim input As String = InputBox(prompt, "Rose", value)
+		Public Overrides Function Accept(text As String, ParamArray values() As Object) As Object
+			If values.Length > 1 Then Return Choose(text, values)
+			Dim input As String = InputBox(text, "Rose", IIf(values.Length = 1, values(0), ""))
 			If input = "" Then Return Nothing
 			Dim result As Decimal
 			If Decimal.TryParse(input, result) Then Return result Else Return input
@@ -148,7 +147,7 @@ Namespace Rose
 			MsgBox(text, vbInformation, "Rose")
 		End Sub
 
-		Public Overrides Function Concur(text As String) As Boolean
+		Public Overrides Function Confirm(text As String) As Boolean
 			Return MsgBox(text, vbQuestion + vbYesNo, "Rose") = vbYes
 		End Function
 

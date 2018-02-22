@@ -6,7 +6,7 @@ Namespace Scripting
 
 		Public Sub Invoke(fmt As String, ParamArray args As Object())
 			Dim text As String = String.Format(fmt, args)
-			Invoker.Host.Inform(text)
+			Invoker.Host.Alert(text)
 		End Sub
 
 	End Module

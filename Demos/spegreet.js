@@ -11,6 +11,6 @@ function Start(){
 		var name = greetInput.ForPrompt(0);			//get input for prompt 0 
 		var region = greetInput.ForPrompt("Your region");	//get input for prompt "Your region"
 		var respect = greetInput.ForPrompt("Respect", true);	//get input for prompt "Respect" as choice
-		Host.Inform(greeter.Greet(name, region, respect), "Greetings");
+		Host.Inform(greeter.Greet(name, region, respect));
 	}
 }

@@ -17,26 +17,15 @@ Namespace Shila
 			MsgBox(text, vbInformation, title)
 		End Sub
 
-		Public Function Concur(confirmation As String) As Boolean
+		Public Function Confirm(confirmation As String) As Boolean
 			Return MsgBox(confirmation, vbQuestion + vbYesNo, title) = vbYes
 		End Function
 
-		Public Function Accept(prompt As String, Optional value As Object=Nothing) As Object
-			Dim input As String = InputBox(prompt, title, value)
+		Public Function Accept(text As String, Optional value As Object=Nothing) As Object
+			Dim input As String = InputBox(text, title, value)
 			If input = "" Then Return Nothing
 			Dim result As Decimal
 			If Decimal.TryParse(input, result) Then Return result Else Return input
-		End Function
-
-		Public Function Choose(prompt As String, ParamArray choices As Object()) As Object
-			Dim value As Object = Nothing
-			Dim text As String = prompt
-			If choices.Length > 0 Then	
-				prompt = prompt & vbCrLf & "[" & String.Join("|", choices) & "]"
-				value = choices(0)
-			End If
-			Dim result As String = Accept(prompt, value)
-			If Array.IndexOf(choices, result) >= 0 Then Return result Else Return Choose(text, choices)
 		End Function
 
 		Private Sub Start(scriptFile As String)

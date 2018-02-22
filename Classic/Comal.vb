@@ -22,11 +22,11 @@ Namespace Comal
 			Return False
 		End Function		
 
-		Public Function Accept(prompt As String, Optional value As Object=Nothing) As Object
+		Public Function Prompt(text As String, Optional value As Object=Nothing) As Object
 			If value IsNot Nothing Then
-				prompt = prompt & " [" & value & "]"
+				text = text & " [" & value & "]"
 			End If
-			Console.Write("{0}: ", prompt)
+			Console.Write("{0}: ", text)
 			Dim input As String = Console.ReadLine()
 			Console.WriteLine()
 			If input = "" Then Return value
@@ -34,26 +34,12 @@ Namespace Comal
 			If Decimal.TryParse(input, result) Then Return result Else Return input
 		End Function
 
-		Public Function Choose(prompt As String, ParamArray choices As Object()) As Object
-			Dim value As Object = Nothing
-			If choices.Length > 0 Then	
-				prompt = prompt & " [" & String.Join("|", choices) & "]"
-				value = choices(0)
-			End If
-			Console.Write("{0}: ", prompt)
-			Dim input As String = Console.ReadLine()
-			Console.WriteLine()
-			If input = "" Then Return value
-			Dim result As Decimal
-			If Decimal.TryParse(input, result) Then Return result Else Return input
-		End Function
-
-		Public Sub Inform(text As String)
+		Public Sub Alert(text As String)
 			Console.WriteLine(text)			
 		End Sub
 
-		Public Function Concur(confirmation As String) As Boolean
-			Console.Write("{0} (y/n): ", confirmation)
+		Public Function Confirm(text As String) As Boolean
+			Console.Write("{0} (y/n): ", text)
 			Dim result As String = Console.ReadLine()
 			Console.WriteLine()
 			Return result.ToLower() = "y"
