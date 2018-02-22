@@ -42,7 +42,7 @@ Namespace Rose
 			End If
 			Dim input As String = Console.ReadLine()
 			Console.WriteLine()
-			If input.Length = 0 Then input = Nothing
+			If input.Length = 0 Then input = value
 			Dim result As Decimal
 			If Decimal.TryParse(input, result) Then Return result Else Return input		
 		End Function
