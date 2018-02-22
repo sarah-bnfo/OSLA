@@ -22,7 +22,7 @@ Namespace Comal
 			Return False
 		End Function		
 
-		Public Function Prompt(text As String, Optional value As Object=Nothing) As Object
+		Public Function Accept(text As String, Optional value As Object=Nothing) As Object
 			If value IsNot Nothing Then
 				text = text & " [" & value & "]"
 			End If
@@ -34,7 +34,7 @@ Namespace Comal
 			If Decimal.TryParse(input, result) Then Return result Else Return input
 		End Function
 
-		Public Sub Alert(text As String)
+		Public Sub Inform(text As String)
 			Console.WriteLine(text)			
 		End Sub
 
