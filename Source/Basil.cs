@@ -2,17 +2,12 @@ namespace Scripting.Interaction
 {
 	public abstract class AspectProviderBase
 	{
-		public virtual bool OnInform(dynamic scriptObj, string text)
-		{
-			return false;
-		}
-
-		public virtual bool OnConfirm(dynamic scriptObj, string confirmation, out bool result)
+		public virtual bool OnInform(dynamic scriptObj, string text, out bool result)
 		{
 			return result = false;
 		}
 
-		public virtual bool OnAccept(dynamic scriptObj, string Accept, object value, out object result)
+		public virtual bool OnAccept(dynamic scriptObj, string Accept, string value, out object result)
 		{
 			result = null;
 			return false;
@@ -37,31 +32,30 @@ namespace Scripting.Interaction
 
 		protected AspectProviderBase Aspect;
 
-		protected abstract string Input(string Accept, object[] values);
+		protected abstract string Input(string Accept, string[] values);
 
 		protected abstract bool Output(string message, bool confirm);
 
-		public virtual void Inform(string text)
-		{
-			if(Aspect == null || Aspect.OnInform(Active, text) == false)
-				Output(text, false);
-		}
-
-		public virtual bool Confirm(string text)
+		public virtual bool Inform(string text)
 		{
 			bool result = false;
-			if(Aspect != null && Aspect.OnConfirm(Active, text, out result)) return result;
+			if(Aspect != null && Aspect.OnInform(Active, text, out result)) return result;
 
-			return Output(text, true);
+			return Output(text, text.EndsWith("?"));
 		}
 
-		public virtual object Accept(string text, params object[] values)
+		public virtual object Accept(string text, string value=null)
 		{
 			object result = null;
-			if(Aspect != null && Aspect.OnAccept(Active, text, values, out result)) return result;
+			if(Aspect != null && Aspect.OnAccept(Active, text, value, out result)) return result;
 
-			string input = Input(text, values);
-			if(input == null) return values.Length == 1 ? values[0] : null;
+			string input;
+			if(value != null && value.Contains("|"))
+				input = Input(text, value.Split('|'));
+			else
+				input = Input(text, new string[]{value});
+
+			if(input == null) return value;
 
 			decimal inputVal;
 			if(decimal.TryParse(input, out inputVal))

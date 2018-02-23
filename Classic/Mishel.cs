@@ -344,5 +344,5 @@ namespace Scripting.Integration
 
 }
 
-//csc /t:library /out:Mishel64.dll Mishel.cs
-//csc /t:library /d:_X86 /out:Mishel32.dll Mishel.cs
+//csc /t:library /out:MishelQ.dll Mishel.cs
+//csc /t:library /d:_X86 /out:MishelT.dll Mishel.cs

@@ -1,18 +1,16 @@
 Imports System
 Imports System.IO
 Imports System.Reflection
-Imports System.Drawing
-Imports Scripting.Integration
 
 Namespace Rose
 
+	#If CORE
+
 	Public MustInherit Class InteractionHost
 
-		Public MustOverride Sub Inform(text As String)
+		Public MustOverride Function Inform(text As String)
 
 		Public MustOverride Function Accept(text As String, Optional value As Object=Nothing) As Object
-
-		Public MustOverride Function Confirm(text As String) As Boolean
 
 		Public Overridable Function Action(name As String, ParamArray options As Object()) As Object		
 			If name.ToLower() = "identify" Then Return "Rose"
@@ -20,19 +18,17 @@ Namespace Rose
 		End Function
 
 		Public Overridable Function Import(source As String)
-			Return ScriptCaller.CallScript(File.ReadAllText(source), Me)
+			Return Scripting.Integration.ScriptCaller.CallScript(File.ReadAllText(source), Me)
 		End Function
 
-		Friend Overridable Sub Run(script As String)
-			ScriptCaller.CallScript(File.ReadAllText(script), Me, "Start")
+		Public Overridable Sub Run(script As String)
+			Scripting.Integration.ScriptCaller.CallScript(File.ReadAllText(script), Me, "Start")
 		End Sub
 
 	End Class
 
 	Public Class ConsoleInteractionHost
 	Inherits InteractionHost
-
-		Declare Sub AllocConsole Lib "Kernel32"()
 
 		Public Overrides Function Accept(text As String, Optional value As Object=Nothing) As Object
 			If value IsNot Nothing Then
@@ -41,34 +37,15 @@ Namespace Rose
 				Console.Write("{0}: ", text)				
 			End If
 			Dim input As String = Console.ReadLine()
-			Console.WriteLine()
-			If input.Length = 0 Then input = value
+			If input.Length = 0 Then input = Nothing
 			Dim result As Decimal
 			If Decimal.TryParse(input, result) Then Return result Else Return input		
 		End Function
 
-		Public Overrides Sub Inform(text As String)
+		Public Overrides Function Inform(text As String)
 			Console.WriteLine(text)
-			Console.WriteLine()
-		End Sub
-
-		Public Overrides Function Confirm(text As String) As Boolean
-			Console.Write("{0} (y/n): ", text)
-			Dim input As String = Console.ReadLine()
-			Console.WriteLine()
-			Return input.ToLower() = "y"
+			Return True
 		End Function
-
-		Friend Overrides Sub Run(script As String)
-			AllocConsole()
-			Console.SetOut(New System.IO.StreamWriter(Console.OpenStandardOutput()) With {.AutoFlush=True})
-			Console.SetIn(New System.IO.StreamReader(Console.OpenStandardInput()))
-			Console.Title = "Rose (Console)"
-			MyBase.Run(script)
-			Console.Write("Enter any key to exit...")
-			Console.ReadLine()
-		End Sub
-
 
 	End Class
 
@@ -82,39 +59,45 @@ Namespace Rose
 			If Decimal.TryParse(input, result) Then Return result Else Return input
 		End Function
 
-		Public Overrides Sub Inform(text As String)
-			MsgBox(text, vbInformation, "Rose")
-		End Sub
-
-		Public Overrides Function Confirm(text As String) As Boolean
-			Return MsgBox(text, vbQuestion + vbYesNo, "Rose") = vbYes
+		Public Overrides Function Inform(text As String)
+			Return MsgBox(text, vbInformation, "Rose")
 		End Function
 
 	End Class
+
+	#ELSE
 
 	Module Launcher
 
 		<STAThread> Public Sub Main(args As String())
 			If args.Length > 0 Then
 				Dim host As InteractionHost
-				Dim script As String
-				If args.Length > 1 AndAlso args(0) = "/c" Then
-					host = New ConsoleInteractionHost()
-					script = args(1)
-				Else
-					host = New DialogInteractionHost()
-					script = args(0)
-				End If
+				Dim script As String = args(0)
+				#If CONS
+				Console.Clear()
+				host = New ConsoleInteractionHost()
+				#Else
+				host = New DialogInteractionHost()
+				#End If
 				Try
 					host.Run(script)
 				Catch ex As Exception
+					#If CONS
+					Console.WriteLine(ex.ToString())
+					#Else
 					MsgBox(ex.ToString(), vbExclamation, "Rose")
+					#End If
 				End Try
 			End If
 		End Sub
 
-	End Module	
+	End Module
+	
+	#End If
 
 End Namespace
 
-'vbc /t:winexe /win32icon:..\Resource\rose.ico Rose.vb /r:Mishel64.dll
+'vbc /out:RoseCore.dll /t:library /d:CORE Rose.vb /r:MishelQ.dll
+'vbc /t:winexe /win32icon:..\Resource\rose.ico Rose.vb /r:RoseCore.dll
+'vbc /d:CONS /out:Rose.com Rose.vb /r:RoseCore.dll
+'ren Rose.com.exe Rose.com

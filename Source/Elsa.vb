@@ -9,7 +9,7 @@ Namespace Scripting.Interaction
 
         Private Declare Sub AllocConsole Lib "Kernel32"()
 
-	Private Function Assign(ByVal prompt As String, items As Object()) As Object
+	Private Function Assign(ByVal prompt As String, items As String()) As Object
             Console.WriteLine(prompt)
 	    Dim pb As Integer = Console.CursorTop
 	    For Each item In items
@@ -72,7 +72,7 @@ Namespace Scripting.Interaction
 		Return False
 	End Function
 
-	Protected Overrides Function Input(ByVal prompt As String, ByVal values As Object()) As String
+	Protected Overrides Function Input(ByVal prompt As String, ByVal values As String()) As String
 		If values.Length > 1 Then Return Assign(prompt, values)
 		If values(0) IsNot Nothing Then My.Computer.Keyboard.SendKeys(values(0), True)
             	Console.WriteLine(prompt)
