@@ -2,12 +2,12 @@ namespace Scripting.Interaction
 {
 	public abstract class AspectProviderBase
 	{
-		public virtual bool OnInform(dynamic scriptObj, string text, out bool result)
+		public virtual bool OnInform(dynamic scriptObj, string text, bool confirm, out bool result)
 		{
 			return result = false;
 		}
 
-		public virtual bool OnAccept(dynamic scriptObj, string Accept, string value, out object result)
+		public virtual bool OnAccept(dynamic scriptObj, string text, object[] values, out object result)
 		{
 			result = null;
 			return false;
@@ -32,30 +32,25 @@ namespace Scripting.Interaction
 
 		protected AspectProviderBase Aspect;
 
-		protected abstract string Input(string Accept, string[] values);
+		protected abstract string Input(string Accept, object[] values);
 
 		protected abstract bool Output(string message, bool confirm);
 
-		public virtual bool Inform(string text)
+		public virtual bool Inform(string text, bool confirm=false)
 		{
 			bool result = false;
-			if(Aspect != null && Aspect.OnInform(Active, text, out result)) return result;
+			if(Aspect != null && Aspect.OnInform(Active, text, confirm, out result)) return result;
 
-			return Output(text, text.EndsWith("?"));
+			return Output(text, confirm);
 		}
 
-		public virtual object Accept(string text, string value=null)
+		public virtual object Accept(string text, params object[] values)
 		{
 			object result = null;
-			if(Aspect != null && Aspect.OnAccept(Active, text, value, out result)) return result;
+			if(Aspect != null && Aspect.OnAccept(Active, text, values, out result)) return result;
 
-			string input;
-			if(value != null && value.Contains("|"))
-				input = Input(text, value.Split('|'));
-			else
-				input = Input(text, new string[]{value});
-
-			if(input == null) return value;
+			string input = Input(text, values);
+			if(input == null) return values.Length == 1 ? values[0] : null;
 
 			decimal inputVal;
 			if(decimal.TryParse(input, out inputVal))

@@ -100,7 +100,7 @@ namespace Scripting.Interaction
 	    		return dr == DialogResult.OK;
 		}
 
-		protected override string Input(string prompt, string[] values)
+		protected override string Input(string prompt, object[] values)
 		{
 	    		Form box = new Form();
 			box.BackColor = Color.White;
@@ -119,8 +119,8 @@ namespace Scripting.Interaction
 				ComboBox comboBox = new ComboBox();
 				comboBox.Location = new Point(10, label.Bottom);
 				comboBox.Size = new Size(320, 20);
-				foreach(string value in values)
-					comboBox.Items.Add(value);
+				foreach(object value in values)
+					comboBox.Items.Add(value.ToString());
 				comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 				comboBox.SelectedIndex = 0;
 				box.Controls.Add(comboBox);
@@ -131,7 +131,7 @@ namespace Scripting.Interaction
 				TextBox textBox = new TextBox();
 				textBox.Location = new Point(10, label.Bottom);
 				textBox.Size = new Size(320, 20);
-				textBox.Text = values[0] != null ? values[0] : String.Empty;
+				textBox.Text = values[0] != null ? values[0].ToString() : String.Empty;
 				box.Controls.Add(textBox);
 				inputControl = textBox;
 			}
