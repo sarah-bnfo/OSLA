@@ -9,7 +9,7 @@ Namespace Scripting.Interaction
 
         Private Declare Sub AllocConsole Lib "Kernel32"()
 
-	Private Function Assign(ByVal prompt As String, items As String()) As Object
+	Private Function Assign(ByVal prompt As String, items As Object()) As Object
             Console.WriteLine(prompt)
 	    Dim pb As Integer = Console.CursorTop
 	    For Each item In items
