@@ -97,7 +97,7 @@ Namespace Rose
 
 End Namespace
 
-'vbc /out:RoseCore.dll /t:library /d:CORE Rose.vb /r:MishelQ.dll
-'vbc /t:winexe Rose.vb /r:RoseCore.dll
-'vbc /d:CONS /out:Rose.com Rose.vb /r:RoseCore.dll
-'ren Rose.com.exe Rose.com
+'vbc /out:RoseLib.dll /t:library /d:CORE Rose.vb /r:MishelQ.dll
+'vbc /t:winexe Rose.vb /r:RoseLib.dll
+'vbc /d:CONS /out:Rose.com Rose.vb /r:RoseLib.dll
+'move /Y Rose.com.exe Rose.com
