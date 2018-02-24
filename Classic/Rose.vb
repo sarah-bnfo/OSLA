@@ -60,7 +60,7 @@ Namespace Rose
 		End Function
 
 		Public Overrides Function Inform(text As String)
-			Return MsgBox(text, vbInformation, "Rose")
+			Return MsgBox(text, vbInformation + vbOkCancel, "Rose") = vbOK
 		End Function
 
 	End Class
@@ -98,6 +98,6 @@ Namespace Rose
 End Namespace
 
 'vbc /out:RoseCore.dll /t:library /d:CORE Rose.vb /r:MishelQ.dll
-'vbc /t:winexe /win32icon:..\Resource\rose.ico Rose.vb /r:RoseCore.dll
+'vbc /t:winexe Rose.vb /r:RoseCore.dll
 'vbc /d:CONS /out:Rose.com Rose.vb /r:RoseCore.dll
 'ren Rose.com.exe Rose.com

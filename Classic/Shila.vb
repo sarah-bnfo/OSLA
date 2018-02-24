@@ -13,13 +13,10 @@ Namespace Shila
 			Return False
 		End Function		
 
-		Public Sub Inform(text As String)
-			MsgBox(text, vbInformation, title)
-		End Sub
-
-		Public Function Confirm(confirmation As String) As Boolean
-			Return MsgBox(confirmation, vbQuestion + vbYesNo, title) = vbYes
+		Public Function Inform(text As String)
+			Return MsgBox(text, vbInformation + vbOkCancel, title) = vbOK
 		End Function
+
 
 		Public Function Accept(text As String, Optional value As Object=Nothing) As Object
 			Dim input As String = InputBox(text, title, value)
