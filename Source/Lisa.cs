@@ -49,7 +49,7 @@ namespace Scripting.Interaction
 			messagePanel.Controls.Add(messageLabel);
 			
             		buttonOK.DialogResult = DialogResult.OK;
-            		buttonOK.Location = yesno ? new Point(160, 8) : new Point(250, 8);
+            		buttonOK.Location = new Point(160, 8);
            		buttonOK.Size = new Size(80, 25);
             		buttonOK.Text = yesno ? "Yes" : "OK";
 			buttonOK.BackColor = SystemColors.ButtonFace;
@@ -75,7 +75,7 @@ namespace Scripting.Interaction
 			else
 			{
            			Button buttonCopy = new Button();
-            			buttonCopy.Location = new Point(160, 8);
+            			buttonCopy.Location = new Point(250, 8);
             			buttonCopy.Size = new Size(80, 25);
             			buttonCopy.Text = "Copy";
 				buttonCopy.BackColor = SystemColors.ButtonFace;
