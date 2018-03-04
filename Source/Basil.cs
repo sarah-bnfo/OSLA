@@ -54,7 +54,7 @@ namespace Scripting.Interaction
 				input = Input(text, value.ToString().Split('|'));
 			else
 				input = Input(text, new string[]{value.ToString()});
-			if(input == null) return value;
+			if(input == null) return null;
 
 			decimal inputVal;
 			if(decimal.TryParse(input, out inputVal))

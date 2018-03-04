@@ -3,7 +3,7 @@ function Start(){
 	var greeter = Host.Import("greeter.js");
 
 	var greetInput = Host.AcceptMany("Greetings",
-		["Your name", "Owner"], 			//prompt 0
+		["Your name", "^[A-F]*$"], 			//prompt 0
 		["Your region", "East|West|North|South", 2], 	//prompt 1
 		["Respect", "false|true", 1]			//prompt 2
 	);

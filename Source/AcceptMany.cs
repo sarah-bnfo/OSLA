@@ -36,7 +36,17 @@ namespace Scripting
 			TextBox textBox = new TextBox();
 			textBox.Location = new Point(10, label.Bottom);
 			textBox.Size = new Size(320, 20);
-			textBox.Text = value;
+			if(value != null && value.StartsWith("^") && value.EndsWith("$"))
+			{
+				textBox.KeyPress += delegate(object sender, KeyPressEventArgs e)
+				{
+					char ch = e.KeyChar;
+					if(!char.IsControl(ch))
+						e.Handled = !System.Text.RegularExpressions.Regex.IsMatch(textBox.Text + ch, value);
+				};
+			}
+			else
+				textBox.Text = value;
 			textBox.ReadOnly = state != 0;
 			box.Controls.Add(textBox);
 

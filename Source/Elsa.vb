@@ -74,11 +74,20 @@ Namespace Scripting.Interaction
 
 	Protected Overrides Function Input(ByVal prompt As String, ByVal values As String()) As String
 		If values.Length > 1 Then Return Assign(prompt, values)
-		If values(0) IsNot Nothing Then My.Computer.Keyboard.SendKeys(values(0), True)
+		Dim pattern As String = Nothing
+		If values.Length = 1 AndAlso values(0) IsNot Nothing 
+			If values(0).StartsWith("^") AndAlso values(0).EndsWith("$") Then 
+				pattern = values(0)
+			Else
+				My.Computer.Keyboard.SendKeys(values(0), True)
+			End If
+		End If
             	Console.WriteLine(prompt)
-            	Console.Write("> ")
+            	Console.Write("> ")		
             	Dim text As String = Console.ReadLine()
-            	Console.WriteLine()
+           	Console.WriteLine()
+		If text.Length = 0 Then Return Nothing
+		If pattern IsNot Nothing AndAlso Not System.Text.RegularExpressions.RegEx.IsMatch(text, pattern) Then Return Input(prompt, values)
 		Return text
 	End Function
 

@@ -131,7 +131,21 @@ namespace Scripting.Interaction
 				TextBox textBox = new TextBox();
 				textBox.Location = new Point(10, label.Bottom);
 				textBox.Size = new Size(320, 20);
-				textBox.Text = values[0] != null ? values[0].ToString() : String.Empty;
+				if(values.Length == 1)
+				{
+					string text = values[0] != null ? values[0].ToString() : String.Empty;
+					if(text.StartsWith("^") && text.EndsWith("$"))
+					{
+						textBox.KeyPress += delegate(object sender, KeyPressEventArgs e)
+						{
+							char ch = e.KeyChar;
+							if(!char.IsControl(ch))
+								e.Handled = !System.Text.RegularExpressions.Regex.IsMatch(textBox.Text + ch, text);
+						};
+					}
+					else
+						textBox.Text = text;
+				}
 				box.Controls.Add(textBox);
 				inputControl = textBox;
 			}
