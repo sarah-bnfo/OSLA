@@ -10,7 +10,7 @@ Namespace Rose
 
 		Public MustOverride Function Inform(text As String)
 
-		Public MustOverride Function Accept(text As String, Optional value As Object=Nothing) As Object
+		Public MustOverride Function Accept(text As String, Optional value As Object=Nothing) As String
 
 		Public Overridable Function Action(name As String, ParamArray options As Object()) As Object		
 			If name.ToLower() = "identify" Then Return "Rose"
@@ -30,7 +30,7 @@ Namespace Rose
 	Public Class ConsoleInteractionHost
 	Inherits InteractionHost
 
-		Public Overrides Function Accept(text As String, Optional value As Object=Nothing) As Object
+		Public Overrides Function Accept(text As String, Optional value As Object=Nothing) As String
 			If value IsNot Nothing Then
 				Console.Write("{0} [{1}]: ", text, value)
 			Else
@@ -38,8 +38,7 @@ Namespace Rose
 			End If
 			Dim input As String = Console.ReadLine()
 			If input.Length = 0 Then input = value
-			Dim result As Decimal
-			If Decimal.TryParse(input, result) Then Return result Else Return input		
+			Return input		
 		End Function
 
 		Public Overrides Function Inform(text As String)
@@ -52,11 +51,10 @@ Namespace Rose
 	Public Class DialogInteractionHost 
 	Inherits InteractionHost
 
-		Public Overrides Function Accept(text As String, Optional value As Object=Nothing) As Object
+		Public Overrides Function Accept(text As String, Optional value As Object=Nothing) As String
 			Dim input As String = InputBox(text, "Rose", value)
 			If input = "" Then Return Nothing
-			Dim result As Decimal
-			If Decimal.TryParse(input, result) Then Return result Else Return input
+			Return input
 		End Function
 
 		Public Overrides Function Inform(text As String)

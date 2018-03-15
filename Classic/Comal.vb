@@ -22,7 +22,7 @@ Namespace Comal
 			Return False
 		End Function		
 
-		Public Function Accept(text As String, Optional value As Object=Nothing) As Object
+		Public Function Accept(text As String, Optional value As Object=Nothing) As String
 			If value IsNot Nothing Then
 				text = text & " [" & value & "]"
 			End If
@@ -30,8 +30,7 @@ Namespace Comal
 			Dim input As String = Console.ReadLine()
 			Console.WriteLine()
 			If input = "" Then Return value
-			Dim result As Decimal
-			If Decimal.TryParse(input, result) Then Return result Else Return input
+			Return input
 		End Function
 
 		Public Sub Inform(text As String)

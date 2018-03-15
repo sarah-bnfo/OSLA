@@ -18,11 +18,10 @@ Namespace Shila
 		End Function
 
 
-		Public Function Accept(text As String, Optional value As Object=Nothing) As Object
+		Public Function Accept(text As String, Optional value As Object=Nothing) As String
 			Dim input As String = InputBox(text, title, value)
 			If input = "" Then Return Nothing
-			Dim result As Decimal
-			If Decimal.TryParse(input, result) Then Return result Else Return input
+			Return input
 		End Function
 
 		Private Sub Start(scriptFile As String)
